@@ -7,11 +7,17 @@ import { loadScene } from './state/sceneSlice';
 import HierarchyPanel from './panels/HierarchyPanel';
 import InspectorPanel from './panels/InspectorPanel';
 import AssetsPanel from './panels/AssetsPanel';
-import ViewportPanel from './panels/ViewportPanel';
+import ViewportPanel, { ViewportPanelRef } from './panels/ViewportPanel';
 import ConsolePanel from './panels/ConsolePanel';
 import ModelMakerPanel from './panels/ModelMakerPanel';
 
-const TabButton = ({ active, onClick, children }) => (
+interface TabButtonProps {
+  active: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}
+
+const TabButton = ({ active, onClick, children }: TabButtonProps) => (
   <button
     onClick={onClick}
     className={`px-4 py-2 text-sm font-semibold border-b-2 transition-colors duration-200 ${
@@ -24,7 +30,11 @@ const TabButton = ({ active, onClick, children }) => (
   </button>
 );
 
-const BottomPanel = ({ viewportRef }) => {
+interface BottomPanelProps {
+  viewportRef: React.RefObject<any>;
+}
+
+const BottomPanel = ({ viewportRef }: BottomPanelProps) => {
   const [activeTab, setActiveTab] = useState('Model Maker');
 
   return (
@@ -47,7 +57,7 @@ const BottomPanel = ({ viewportRef }) => {
 };
 
 function App() {
-  const viewportRef = useRef<any>(null);
+  const viewportRef = useRef<ViewportPanelRef>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const sceneObjects = useSelector((state: RootState) => state.scene.objects);
   const dispatch = useDispatch<AppDispatch>();

@@ -1,6 +1,7 @@
 import { PhysicsAdapter, BodyDesc, RayHit } from './PhysicsSystem';
 import { World } from '@shockwave/ecs';
-import * as CANNON from 'cannon-es';
+import { CANNON } from '../index';
+
 import { Vec3, Quat, Vector3 } from '@shockwave/math';
 
 export class CannonPhysicsAdapter implements PhysicsAdapter {

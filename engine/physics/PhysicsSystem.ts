@@ -3,7 +3,8 @@ import { Vec3, Quat } from '@shockwave/math';
 import { PhysicsBodyComponent, TransformComponent } from '../components';
 
 import { CannonPhysicsAdapter } from './CannonPhysicsAdapter';
-import * as CANNON from 'cannon-es';
+import { CANNON } from '../index';
+
 
 export interface RayHit {
   entity: number;

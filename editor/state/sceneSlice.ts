@@ -13,15 +13,31 @@ export interface SceneObject {
     geometry: { type: string; [key: string]: any }; // e.g., { type: 'BoxGeometry', width: 1, height: 1, depth: 1 }
     material: { type: string; [key: string]: any }; // e.g., { type: 'MeshStandardMaterial', color: '#ffffff' }
   };
+  physics: {
+    isPhysicsBody: boolean;
+    mass: number;
+    friction: number; // Body friction
+    restitution: number; // Body restitution
+    materialFriction: number; // Material friction
+    materialRestitution: number; // Material restitution
+    collisionGroup: number; // Bitmask for collision group
+    collisionMask: number; // Bitmask for collision mask
+  };
 }
 
-// Define the state shape
-interface SceneState {
+const CollisionGroups = {
+  DEFAULT: 1,
+  PLAYER: 2,
+  ENVIRONMENT: 4,
+  // Add more as needed
+};
+
+// Define the initial state
+export interface SceneState {
   objects: Record<string, SceneObject>;
   selectedObjects: string[];
 }
 
-// Define the initial state
 const initialState: SceneState = {
   objects: {},
   selectedObjects: [],
@@ -33,18 +49,49 @@ const sceneSlice = createSlice({
   reducers: {
     addObject: (state, action: PayloadAction<Omit<SceneObject, 'id'> | Partial<SceneObject>>) => {
       const id = uuidv4();
-      const newObject: SceneObject = {
-        id,
+      const baseObject: Omit<SceneObject, 'id'> = {
         name: 'Object',
         type: 'Mesh',
-        ...action.payload,
         properties: {
           position: { x: 0, y: 0, z: 0 },
           rotation: { x: 0, y: 0, z: 0 },
           scale: { x: 1, y: 1, z: 1 },
-          ...action.payload.properties,
+          geometry: { type: 'BoxGeometry' },
+          material: { type: 'MeshStandardMaterial', color: '#ffffff' },
+        },
+        physics: {
+          isPhysicsBody: false,
+          mass: 1,
+          friction: 0.5,
+          restitution: 0.2,
+          materialFriction: 0.5,
+          materialRestitution: 0.2,
+          collisionGroup: CollisionGroups.DEFAULT,
+          collisionMask: CollisionGroups.DEFAULT | CollisionGroups.PLAYER | CollisionGroups.ENVIRONMENT,
         },
       };
+
+      const newObject: SceneObject = {
+        id,
+        ...baseObject,
+        ...action.payload,
+        properties: {
+          ...baseObject.properties,
+          ...action.payload.properties,
+          position: { ...baseObject.properties.position, ...action.payload.properties?.position },
+          rotation: { ...baseObject.properties.rotation, ...action.payload.properties?.rotation },
+          scale: { ...baseObject.properties.scale, ...action.payload.properties?.scale },
+        },
+        physics: {
+          ...baseObject.physics,
+          ...action.payload.physics,
+        },
+      };
+
+      if (!['Mesh', 'Light', 'Camera'].includes(newObject.type)) {
+        newObject.type = 'Mesh';
+      }
+
       state.objects[id] = newObject;
     },
     removeObject: (state, action: PayloadAction<string>) => {
@@ -56,7 +103,7 @@ const sceneSlice = createSlice({
     toggleSelection: (state, action: PayloadAction<string>) => {
       const id = action.payload;
       if (state.selectedObjects.includes(id)) {
-        state.selectedObjects = state.selectedObjects.filter(selectedId => selectedId !== id);
+        state.selectedObjects = state.selectedObjects.filter((selectedId: string) => selectedId !== id);
       } else {
         state.selectedObjects = [...state.selectedObjects, id];
       }
@@ -64,16 +111,24 @@ const sceneSlice = createSlice({
     clearSelection: (state) => {
       state.selectedObjects = [];
     },
-    updateObjectProperties: (state, action: PayloadAction<{ id: string; properties: Partial<SceneObject['properties']> }>) => {
-      const { id, properties } = action.payload;
+    updateObjectProperties: (state, action: PayloadAction<{ id: string; properties?: Partial<SceneObject['properties']>; physics?: Partial<SceneObject['physics']> }>) => {
+      const { id, properties, physics } = action.payload;
       if (state.objects[id]) {
-        state.objects[id].properties = {
-          ...state.objects[id].properties,
-          ...properties,
-          position: { ...state.objects[id].properties.position, ...properties.position },
-          rotation: { ...state.objects[id].properties.rotation, ...properties.rotation },
-          scale: { ...state.objects[id].properties.scale, ...properties.scale },
-        };
+        if (properties) {
+          state.objects[id].properties = {
+            ...state.objects[id].properties,
+            ...properties,
+            position: { ...state.objects[id].properties.position, ...properties.position },
+            rotation: { ...state.objects[id].properties.rotation, ...properties.rotation },
+            scale: { ...state.objects[id].properties.scale, ...properties.scale },
+          };
+        }
+        if (physics) {
+          state.objects[id].physics = {
+            ...state.objects[id].physics,
+            ...physics,
+          };
+        }
       }
     },
     loadScene: (state, action: PayloadAction<Record<string, SceneObject>>) => {

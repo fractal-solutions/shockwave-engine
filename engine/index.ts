@@ -5,7 +5,10 @@ import { PhysicsSystem } from './physics/PhysicsSystem';
 import { InputSystem } from './input/InputSystem';
 import { PlayerMovementSystem } from './player/PlayerMovementSystem';
 
-export { World } from './core/World';
+import * as CANNON from 'cannon-es';
+
+export { World };
+export { CANNON };
 
 export class Engine {
   private world: World;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addObject, removeObject, clearSelection } from '../state/sceneSlice';
+import { addObject, removeObject, clearSelection, SceneObject } from '../state/sceneSlice';
 import { AppDispatch, RootState } from '../state/store';
 import { subtract, union, intersect } from '../../packages/csg';
 import * as THREE from 'three';
@@ -17,7 +17,13 @@ const Button = ({ onClick, children, disabled = false }: { onClick: () => void; 
   </button>
 );
 
-const ModelMakerPanel: React.FC = ({ viewportRef }) => {
+import { ViewportPanelRef } from './ViewportPanel';
+
+interface ModelMakerPanelProps {
+  viewportRef: React.RefObject<ViewportPanelRef>;
+}
+
+const ModelMakerPanel: React.FC<ModelMakerPanelProps> = ({ viewportRef }) => {
   const dispatch = useDispatch<AppDispatch>();
   const { selectedObjects } = useSelector((state: RootState) => state.scene);
 
@@ -86,7 +92,7 @@ const ModelMakerPanel: React.FC = ({ viewportRef }) => {
       }
       const geometryIndex = resultMesh.geometry.index ? Array.from(resultMesh.geometry.index.array as Uint16Array | Uint32Array) : null;
 
-      const newObjectData = {
+      const newObjectData: Partial<SceneObject> = {
         name: `${operationName}(${meshA.name}, ${meshB.name})`,
         type: 'Mesh',
         properties: {
