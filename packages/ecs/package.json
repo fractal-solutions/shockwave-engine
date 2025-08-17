@@ -1,0 +1,13 @@
+{
+  "name": "@shockwave/ecs",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "bun tsc"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

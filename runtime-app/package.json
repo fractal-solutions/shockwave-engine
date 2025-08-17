@@ -1,0 +1,17 @@
+{
+  "name": "@shockwave/runtime-app",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./dist/main.js",
+  "scripts": {
+    "dev": "vite",
+    "start": "vite preview",
+    "build": "bun tsc && vite build"
+  },
+  "dependencies": {
+    "@shockwave/engine": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

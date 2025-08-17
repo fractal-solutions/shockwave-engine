@@ -1,0 +1,45 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@shockwave/ecs": ["./packages/ecs"],
+      "@shockwave/math": ["./packages/math"],
+      "@shockwave/utils": ["./packages/utils"],
+      "@shockwave/csg": ["./packages/csg"],
+      "@shockwave/gpgpu": ["./packages/gpgpu"],
+      "@shockwave/engine": ["./engine"]
+    }
+  },
+  "include": [
+    "./**/*.ts",
+    "./**/*.tsx",
+    "./**/*.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ],
+  "references": [
+    { "path": "./packages/ecs" },
+    { "path": "./packages/math" },
+    { "path": "./packages/utils" },
+    { "path": "./packages/csg" },
+    { "path": "./packages/gpgpu" },
+    { "path": "./engine" },
+    { "path": "./editor" },
+    { "path": "./runtime-app" }
+  ]
+}
