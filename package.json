@@ -15,7 +15,8 @@
   },
   "devDependencies": {
     "@types/bun": "latest",
-    "@vitejs/plugin-react": "^5.0.1"
+    "@types/uuid": "^10.0.0",
+    "@vitejs/plugin-react": "latest"
   },
   "peerDependencies": {
     "typescript": "^5"
@@ -23,6 +24,7 @@
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",
     "@reduxjs/toolkit": "^2.8.2",
+    "@tailwindcss/postcss": "^4.1.12",
     "@types/react": "^19.1.10",
     "@types/react-dom": "^19.1.7",
     "@types/three": "^0.179.0",
@@ -33,9 +35,11 @@
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-redux": "^9.2.0",
-    "react-resizable-panels": "^3.0.4",
     "tailwindcss": "^4.1.12",
     "three": "^0.179.1",
+    "three-csg-ts": "^3.2.0",
+    "three-stdlib": "^2.36.0",
+    "uuid": "^11.1.0",
     "vite": "^7.1.2"
   }
 }

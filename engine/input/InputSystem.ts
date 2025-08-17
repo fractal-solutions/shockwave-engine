@@ -20,9 +20,8 @@ export class InputSystem implements System {
   }
 
   update(world: World, dt: number): void {
-    // Reset mouse delta each frame
-    this.mouseDeltaX = 0;
-    this.mouseDeltaY = 0;
+    // This method is now intentionally empty.
+    // Deltas are reset on read to prevent timing issues.
   }
 
   private onKeyDown(event: KeyboardEvent): void {
@@ -49,11 +48,15 @@ export class InputSystem implements System {
   }
 
   public getMouseDeltaX(): number {
-    return this.mouseDeltaX;
+    const delta = this.mouseDeltaX;
+    this.mouseDeltaX = 0; // Reset after reading
+    return delta;
   }
 
   public getMouseDeltaY(): number {
-    return this.mouseDeltaY;
+    const delta = this.mouseDeltaY;
+    this.mouseDeltaY = 0; // Reset after reading
+    return delta;
   }
 
   public requestPointerLock(): void {
